@@ -92,7 +92,7 @@ dict_graphs = {
 
 def graph_df(df):
     df_graph = df.copy()
-    df_graph = df_graph[['date', 'city', 'avg_temp', 'total_precip', 'avg_wind', 'is_rainy']]
+    df_graph = df_graph[['date', 'city', 'avg_temp', 'total_precip', 'avg_wind', 'is_rainy', 'comfort_index']]
 
     graph_key = None
     
@@ -104,7 +104,7 @@ def graph_df(df):
                 )
         selected_data_ru = st.selectbox(
                     "Выберите параметр",
-                   ["Температура", "Количество осадков", "Ветер", "Признак дождя"],
+                   ["Температура", "Количество осадков", "Ветер", "Признак дождя", "Индекс комфорта (чем выше — тем комфортнее)"],
                     )
         if selected_city_ru and selected_data_ru:
             # для перевода выбранных названий в столбцы df
@@ -124,3 +124,6 @@ def graph_df(df):
     if graph_key:
         fig = dict_graphs[graph_key](data_graph, selected_city_names, selected_data)
         st.plotly_chart(fig)
+
+
+    

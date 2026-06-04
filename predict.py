@@ -100,6 +100,8 @@ def predict_data(
 
 
     RD = df_pandas_data[selected_data_col].to_numpy()
+    # Столбец с признаками historical/forecast data open-meteo.com
+    DD = df_pandas_data['Данные']
     # при выборке данных учитываем, что используем метод скользящей средней
     XD, YD = df_pandas_data.X.iloc[rolling_mean_days - 1 : ].to_numpy(), df_pandas_data.Y.loc[rolling_mean_days - 1 : ].to_numpy()
     D =  df_pandas_data['date'].to_numpy()
@@ -140,10 +142,10 @@ def predict_data(
     # df_predict_data = pd.DataFrame({"date" : DP[-2 - d : ], selected_data_col : Y[-2 - d : ]})
 
 
-    df_predict_data = pd.DataFrame({"date" : DP[-1 - d : ], selected_data_col : Y[-1 - d : ]})
-    df_real_data = pd.DataFrame({"date" : D, selected_data_col : RD})
-    df_predict_data['Данные'] = "Прогнозируемые"
-    df_real_data['Данные'] = "Настоящие"
+    df_predict_data = pd.DataFrame({'date' : DP[-1 - d : ], selected_data_col : Y[-1 - d : ]})
+    df_real_data = pd.DataFrame({'date' : D, selected_data_col : RD, 'Данные' : DD})
+    df_predict_data['Данные'] = "Прогнозируемые линейной регрессией"
+    # df_real_data['Данные'] = "Настоящие"
 
     return pd.concat([df_real_data, df_predict_data], ignore_index=True)
 
@@ -156,7 +158,7 @@ def line_graph(df_plot: pd.DataFrame, selected_city_name: str, selected_data: st
         x = "date",
         y = selected_data,
         color = "Данные",
-        color_discrete_sequence=["blue", "red"],
+        color_discrete_sequence=["blue", "red", "green"],
         labels=dict_en_ru,
         title= f'Прогнозные и фактические значения показателя {dict_en_ru[selected_data]} от даты для {selected_city_name}',
         markers=True,
@@ -172,7 +174,13 @@ def line_graph(df_plot: pd.DataFrame, selected_city_name: str, selected_data: st
 
 # входящая функция кода модуля
 def df_graph(df: pd.DataFrame):
-
+    # Добавил условие для расчёта последней фактической (historical) даты
+    # Это условие добавил в Dag
+    mask = (df['Данные'] == "Прошлые данные с сайта open-meteo.com")
+    last_index = mask[mask][::-1].idxmax()  # Получаем индекс последнего True в инвертированной маске
+    df_date_max = df.loc[last_index, 'date']  # Получаем псоледнюю фактическую/настоящую/historical дату
+    
+    
     # ввод данных, используемых для прогноза
     with st.expander(label="Настройка данных для прогнозирования", expanded=True):
         selected_city_ru = st.selectbox(
@@ -182,13 +190,13 @@ def df_graph(df: pd.DataFrame):
                 )
         selected_data_ru = st.selectbox(
                     "Выберите параметр",
-                    ["Температура", "Количество осадков", "Ветер"],
+                    ["Температура", "Количество осадков", "Ветер", "Индекс комфорта (чем выше — тем комфортнее)"],
                     key="parameter"
                     )
         days_data = st.number_input(
                         label="Выберите какое количество дней будет использовано для построения прогноза", 
                         min_value=7, 
-                        max_value=( df.date.max() - df.date.min() ).days // 2,
+                        max_value=( df_date_max - df.date.min() ).days // 2, #( df.date.max() - df.date.min() ).days // 2,
                         step=1,
                         value=20,
                         format="%0d",
@@ -197,12 +205,13 @@ def df_graph(df: pd.DataFrame):
 
         date_first_predict =  st.date_input(
                     "Выбор даты, на которую нужно сделать прогноз",              
-                    value = df.date.min() + \
-                        timedelta(
-                        days= ( df.date.max() - df.date.min() ).days // 2                      
-                        ),
+                    value = df_date_max,
+                    # value =df.date.min() + \
+                        # timedelta(
+                        # days=( df_date_max - df.date.min() ).days // 2 #( df.date.max() - df.date.min() ).days // 2                      
+                        # ),
 
-                    max_value=df.date.max(),
+                    max_value=df_date_max, #df.date.max(),
                     min_value=df.date.min() + timedelta(days=rolling_mean_days + days_data),
                     key="predict_2"
                 )  
@@ -210,9 +219,9 @@ def df_graph(df: pd.DataFrame):
 
         days_predict = st.number_input(
                         label="Выберите на какое количество дней нужен прогноз", 
-                        value=1,
+                        value=( df.date.max() - date_first_predict ).days + 1,
                         min_value=1, 
-                        max_value=( df.date.max() - date_first_predict ).days + 1,
+                        max_value=( df.date.max() - date_first_predict ).days + 1, #( df.date.max() - date_first_predict ).days + 1,
                         step=1,
                         key="predict_3"                 
                     )     

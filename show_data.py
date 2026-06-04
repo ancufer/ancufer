@@ -26,10 +26,10 @@ def filter_dataframe(df_pandas: pd.DataFrame) -> pd.DataFrame:
     cols_binary = ['is_rainy']
         
     # список категориальных столбцов
-    cols_cat =  ['city', 'cat_temp', 'cat_precip', 'cat_comfrort']
+    cols_cat =  ['city', 'cat_temp', 'cat_precip', 'cat_comfrort', 'Данные']
 
      # список числовых столбцов
-    cols_numeric = ['avg_temp', 'total_precip',	'avg_wind']
+    cols_numeric = ['avg_temp', 'total_precip',	'avg_wind', 'comfort_index']
   
     # создаётся контейнер (ограниченая зона окна) под фильтры
     filter_cont = st.container()
@@ -59,14 +59,17 @@ def filter_dataframe(df_pandas: pd.DataFrame) -> pd.DataFrame:
                 _min = float(df[column].min())
                 _max = float(df[column].max())
                 step = (_max - _min) / 100
-                user_num_input = right.slider(
-                    f"Выбор данных для {column}",
-                    min_value=_min,
-                    max_value=_max,
-                    value=(_min, _max),
-                    step=step,
-                )
-                df = df[df[column].between(*user_num_input)]
+                if _min < _max:
+                    user_num_input = right.slider(
+                        f"Выбор данных для {column}",
+                        min_value=_min,
+                        max_value=_max,
+                        value=(_min, _max),
+                        step=step,
+                    )
+                    df = df[df[column].between(*user_num_input)]
+                else:
+                    st.warning("Измените парметры для отображения таблицы")
                 
             # фильтр для столбцов с датами
             elif column in cols_date:
@@ -110,3 +113,4 @@ def show_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     with st.container(border=True, key="tab_1"):
         st.write(f"Для сортировки по столбцу нажмите на его заголовок")
         st.dataframe(df_filtered_pagination.reset_index(drop=True))
+

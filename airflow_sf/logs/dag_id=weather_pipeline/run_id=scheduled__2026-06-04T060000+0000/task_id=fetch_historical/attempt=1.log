@@ -1,0 +1,120 @@
+[2026-06-04T07:42:06.900+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-06-04T07:42:06.952+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: weather_pipeline.fetch_historical scheduled__2026-06-04T06:00:00+00:00 [queued]>
+[2026-06-04T07:42:06.966+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: weather_pipeline.fetch_historical scheduled__2026-06-04T06:00:00+00:00 [queued]>
+[2026-06-04T07:42:06.967+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-06-04T07:42:07.010+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): fetch_historical> on 2026-06-04 06:00:00+00:00
+[2026-06-04T07:42:07.036+0000] {warnings.py:110} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=149) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-06-04T07:42:07.042+0000] {standard_task_runner.py:63} INFO - Started process 154 to run task
+[2026-06-04T07:42:07.036+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'weather_pipeline', 'fetch_historical', 'scheduled__2026-06-04T06:00:00+00:00', '--job-id', '28', '--raw', '--subdir', 'DAGS_FOLDER/weather_dag.py', '--cfg-path', '/tmp/tmptjgsqmj4']
+[2026-06-04T07:42:07.047+0000] {standard_task_runner.py:91} INFO - Job 28: Subtask fetch_historical
+[2026-06-04T07:42:07.171+0000] {task_command.py:426} INFO - Running <TaskInstance: weather_pipeline.fetch_historical scheduled__2026-06-04T06:00:00+00:00 [running]> on host 47d9245895e8
+[2026-06-04T07:42:07.363+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='student' AIRFLOW_CTX_DAG_ID='weather_pipeline' AIRFLOW_CTX_TASK_ID='fetch_historical' AIRFLOW_CTX_EXECUTION_DATE='2026-06-04T06:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-06-04T06:00:00+00:00'
+[2026-06-04T07:42:07.366+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-06-04T07:42:07.415+0000] {logging_mixin.py:188} INFO - Fetching historical weather data...
+[2026-06-04T07:42:07.416+0000] {logging_mixin.py:188} INFO - Processing historical data for Moscow...
+[2026-06-04T07:42:09.566+0000] {logging_mixin.py:188} INFO - Processing historical data for Bangkok...
+[2026-06-04T07:42:10.069+0000] {logging_mixin.py:188} INFO - Processing historical data for Beijing...
+[2026-06-04T07:42:10.592+0000] {logging_mixin.py:188} INFO - Processing historical data for Berlin...
+[2026-06-04T07:42:11.431+0000] {logging_mixin.py:188} INFO - Processing historical data for Cairo...
+[2026-06-04T07:42:11.956+0000] {logging_mixin.py:188} INFO - Processing historical data for Cape Town...
+[2026-06-04T07:42:12.535+0000] {logging_mixin.py:188} INFO - Processing historical data for Dubai...
+[2026-06-04T07:42:16.642+0000] {logging_mixin.py:188} INFO - Processing historical data for Istanbul...
+[2026-06-04T07:42:17.786+0000] {logging_mixin.py:188} INFO - Processing historical data for Kathmandu...
+[2026-06-04T07:42:39.828+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-06-04T07:42:39.830+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/connectionpool.py", line 467, in _make_request
+    self._validate_conn(conn)
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/connectionpool.py", line 1099, in _validate_conn
+    conn.connect()
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/connection.py", line 653, in connect
+    sock_and_verified = _ssl_wrap_socket_and_match_hostname(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/connection.py", line 806, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+               ^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/util/ssl_.py", line 465, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/util/ssl_.py", line 509, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/ssl.py", line 1042, in _create
+    self.do_handshake()
+  File "/usr/local/lib/python3.12/ssl.py", line 1320, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLEOFError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/connectionpool.py", line 491, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/urllib3/util/retry.py", line 515, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Max retries exceeded with url: /v1/forecast?latitude=27.70169&longitude=85.3206&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m&forecast_days=7&timezone=UTC (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 400, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 235, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 252, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/project/scripts/fetch_and_store.py", line 139, in fetch_historical
+    df = get_weather_data(lat, lon, city)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/project/scripts/fetch_and_store.py", line 64, in get_weather_data
+    forecast_resp = requests.get(forecast_url, params=forecast_params)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/requests/adapters.py", line 517, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Max retries exceeded with url: /v1/forecast?latitude=27.70169&longitude=85.3206&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m&forecast_days=7&timezone=UTC (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)')))
+[2026-06-04T07:42:39.860+0000] {taskinstance.py:1206} INFO - Marking task as UP_FOR_RETRY. dag_id=weather_pipeline, task_id=fetch_historical, run_id=scheduled__2026-06-04T06:00:00+00:00, execution_date=20260604T060000, start_date=20260604T074206, end_date=20260604T074239
+[2026-06-04T07:42:39.881+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 28 for task fetch_historical (HTTPSConnectionPool(host='api.open-meteo.com', port=443): Max retries exceeded with url: /v1/forecast?latitude=27.70169&longitude=85.3206&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m&forecast_days=7&timezone=UTC (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)'))); 154)
+[2026-06-04T07:42:39.942+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2026-06-04T07:42:39.972+0000] {taskinstance.py:3498} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-06-04T07:42:39.976+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
